@@ -86,7 +86,7 @@ jobs:
           targets: image-all
           push: ${{ github.event_name != 'pull_request' }}
           cache-from: type=registry,ref=crazy-max/rtorrent-rutorrent:buildcache
-          cache-to: type=registry,ref=crazy-max/rtorrent-rutorrent,mode=max
+          cache-to: type=registry,ref=cryptic-rick/rtorrent-rutorrent,mode=max
           #set: |
           #  *.cache-from=type=gha
           #  *.cache-to=type=gha,mode=max
