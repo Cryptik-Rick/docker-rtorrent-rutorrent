@@ -83,11 +83,11 @@ jobs:
           files: |
             ./docker-bake.hcl
             ${{ steps.meta.outputs.bake-file }}
-          targets: image-all
+          targets: amd64
           push: ${{ github.event_name != 'pull_request' }}
           set: |
-            *.cache-from=type=registry,ref=crazy-max/rtorrent-rutorrent:buildcache
-            *.cache-to=type=registry,ref=cryptic-rick/rtorrent-rutorrent,mode=max
+            *.cache-from=type=gha
+            *.cache-to=type=gha,mode=max
       -
         name: Check manifest
         if: github.event_name != 'pull_request'
