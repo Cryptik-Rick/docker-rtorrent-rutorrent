@@ -392,7 +392,7 @@ chown rtorrent. \
 chown -R rtorrent. \
   /data/geoip \
   /data/rtorrent/log \
-  /data/rtorrent/.session \
+  /data/rtorrent/"$RT_SESSION_FOLDER" \
   /data/rtorrent/watch \
   /data/rutorrent/conf \
   /data/rutorrent/plugins \
