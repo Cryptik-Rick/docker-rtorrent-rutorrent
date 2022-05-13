@@ -178,14 +178,13 @@ fi
 echo "Checking rTorrent local configuration..."
 if [ -n "$RT_EXT_CONFIG_FILE" ]; then
   if  [ ! -e "/data/rtorrent/$RT_EXT_CONFIG_FILE" ]; then
-    echo "Can't find the file specified by RT_EXT_CONFIG_FILE ; starting without : /data/rtorrent/$RT_EXT_CONFIG_FILE"
-    RT_EXT_CONFIG_FILE=""
-    rtConfigInject = ""
+    echo "Can't find the file specified by RT_EXT_CONFIG_FILE ; starting without /data/rtorrent/$RT_EXT_CONFIG_FILE"
+    rtConfigInject=""
   else
-    rtConfigInject = `cat /data/rtorrent/$RT_EXT_CONFIG_FILE`
+    rtConfigInject=`cat /data/rtorrent/$RT_EXT_CONFIG_FILE`
   fi
 else
-  rtConfigInject = ""
+  rtConfigInject=""
 fi
 
 if [ $RT_INC_PORT_START -eq 0  ] | [ $RT_INC_PORT_END -eq 0 ]; then
