@@ -43,8 +43,9 @@ RU_LOCALE=${RU_LOCALE:-UTF8}
 
 RT_SESSION_FOLDER=${RT_SESSION_FOLDER:-.session}
 RT_DHT_PORT=${RT_DHT_PORT:-6881}
-RT_INC_PORT_START=${RT_INC_PORT_START:-50000}
-RT_INC_PORT_END=${RT_INC_PORT_END:-50000}
+RT_INC_PORT=${RT_INC_PORT_START:-50000}
+RT_INC_PORT_START=${RT_INC_PORT_START:-0}
+RT_INC_PORT_END=${RT_INC_PORT_END:-0}
 RT_EXT_CONFIG_FILE=${RT_EXT_CONFIG_FILE}
 XMLRPC_PORT=${XMLRPC_PORT:-8000}
 XMLRPC_HEALTH_PORT=$((XMLRPC_PORT + 1))
@@ -177,7 +178,7 @@ fi
 echo "Checking rTorrent local configuration..."
 if [ -n "$RT_EXT_CONFIG_FILE" ]; then
   if  [ ! -e "/data/rtorrent/$RT_EXT_CONFIG_FILE" ]; then
-    echo "Can't find the file specified by $RT_EXT_CONFIG_FILE ; starting without : /data/rtorrent/$RT_EXT_CONFIG_FILE"
+    echo "Can't find the file specified by RT_EXT_CONFIG_FILE ; starting without : /data/rtorrent/$RT_EXT_CONFIG_FILE"
     RT_EXT_CONFIG_FILE=""
     rtConfigInject = ""
   else
@@ -185,6 +186,11 @@ if [ -n "$RT_EXT_CONFIG_FILE" ]; then
   fi
 else
   rtConfigInject = ""
+fi
+
+if [ $RT_INC_PORT_START -eq 0  ] | [ $RT_INC_PORT_END -eq 0 ]; then
+  RT_INC_PORT_START=$RT_INC_PORT
+  RT_INC_PORT_END=$RT_INC_PORT
 fi
 
 sed -e "s!@RT_LOG_LEVEL@!$RT_LOG_LEVEL!g" \
