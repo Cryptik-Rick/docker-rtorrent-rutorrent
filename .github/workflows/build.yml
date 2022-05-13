@@ -21,8 +21,8 @@ on:
       - '**.md'
 
 env:
-  DOCKERHUB_SLUG: cryptikrick/rtorrent-rutorrent
-  GHCR_SLUG: ghcr.io/cryptik-rick/rtorrent-rutorrent
+  DOCKERHUB_SLUG: crazymax/rtorrent-rutorrent
+  GHCR_SLUG: ghcr.io/crazy-max/rtorrent-rutorrent
 
 jobs:
   build:
@@ -46,21 +46,13 @@ jobs:
           labels: |
             org.opencontainers.image.title=rTorrent and ruTorrent
             org.opencontainers.image.description=rTorrent and ruTorrent
-            org.opencontainers.image.vendor=CryptikRick
+            org.opencontainers.image.vendor=CrazyMax
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      -
-        name: Cache Docker layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
       -
         name: Login to DockerHub
         if: github.event_name != 'pull_request'
