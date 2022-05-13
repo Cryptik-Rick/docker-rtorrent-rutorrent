@@ -133,7 +133,7 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `RT_INC_PORT`: Incomming connections port - single one; will be overriden by `RT_INC_PORT_START` and `RT_INC_PORT_END` (`network.port_range.set`, default `50000`)
 * `RT_INC_PORT_START`: Incoming connections port range start (`network.port_range.set`, default `50000`)
 * `RT_INC_PORT_END`: Incoming connections port range end (`network.port_range.set`, default `50000`)
-* `RT_EXT_CONFIG_FILE`: Path to the file containing custom config lines not covered by other parameters
+* `RT_EXT_CONFIG_FILE`: Path to the file containing custom config lines not covered by other parameters - relative to /data/rtorrent/
 
 ### ruTorrent
 
