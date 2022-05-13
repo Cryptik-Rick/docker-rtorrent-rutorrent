@@ -130,8 +130,9 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `RT_LOG_XMLRPC`: Log XMLRPC queries to `/data/rtorrent/log/xmlrpc.log` (default `false`)
 * `RT_SESSION_FOLDER`: rTorrent session folder - saved to the data folder (`cfg.session`, default `.session`)
 * `RT_DHT_PORT`: DHT UDP port (`dht.port.set`, default `6881`)
-* `RT_INC_PORT_START`: Incoming connections range start (`network.port_range.set`, default `50000`)
-* `RT_INC_PORT_END`: Incoming connections range end (`network.port_range.set`, default `50000`)
+* `RT_INC_PORT`: Incomming connections port - single one; will be overriden by `RT_INC_PORT_START` and `RT_INC_PORT_END` (`network.port_range.set`, default `50000`)
+* `RT_INC_PORT_START`: Incoming connections port range start (`network.port_range.set`, default `50000`)
+* `RT_INC_PORT_END`: Incoming connections port range end (`network.port_range.set`, default `50000`)
 * `RT_EXT_CONFIG_FILE`: Path to the file containing custom config lines not covered by other parameters
 
 ### ruTorrent
