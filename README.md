@@ -254,7 +254,7 @@ properties of this file:
 * A config layout for the rTorrent's instance you can use in your `.rtorrent.rc`:
   * `cfg.basedir`: Home directory of rtorrent (`/data/rtorrent/`)
   * `cfg.download`: Download directory (`/downloads/`)
-  * `cfg.download_complete`: Completed downloads (`/downloads/complete/`)
+  * `cfg.download_complete`: Completed downloads (`/downloads/completed/`)
   * `cfg.download_temp`:  Downloads in progress (`/downloads/temp/`)
   * `cfg.logs`: Logs directory (`/data/rtorrent/log/`)
   * `cfg.session`: Session directory (`/data/rtorrent/.session/`)
