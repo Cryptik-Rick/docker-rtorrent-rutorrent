@@ -320,6 +320,10 @@ RUN apk --update --no-cache add \
 
 COPY rootfs /
 
+COPY /etc/nginx/ssl/nginx-selfsigned.crt /etc/nginx/ssl/nginx-selfsigned.crt
+COPY /etc/nginx/ssl/nginx-selfsigned.key /etc/nginx/ssl/nginx-selfsigned.key
+COPY /etc/nginx/.htpasswd /etc/nginx/.htpasswd
+
 VOLUME [ "/data", "/downloads", "/passwd" ]
 ENTRYPOINT [ "/init" ]
 
