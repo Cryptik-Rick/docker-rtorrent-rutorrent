@@ -137,15 +137,10 @@ Image: crazymax/rtorrent-rutorrent:latest
 * `RT_LOG_XMLRPC`: Log XMLRPC queries to `/data/rtorrent/log/xmlrpc.log` (default `false`)
 * `RT_SESSION_SAVE_SECONDS`: Seconds between writing torrent information to disk (default `3600`)
 * `RT_TRACKER_DELAY_SCRAPE`: Delay tracker announces at startup (default `true`)
-* `RT_SESSION_FOLDER`: rTorrent session folder - saved to the data folder (`cfg.session`, default `.session`)
 * `RT_DHT_PORT`: DHT UDP port (`dht.port.set`, default `6881`)
 * `RT_INC_PORT`: Incoming connections (`network.port_range.set`, default `50000`)
 * `RT_SEND_BUFFER_SIZE`: Sets default tcp wmem value (`network.send_buffer.size.set`, default `4M`)
 * `RT_RECEIVE_BUFFER_SIZE`: Sets default tcp rmem value (`network.receive_buffer.size.set`, default `4M`)
-* `RT_INC_PORT`: Incomming connections port - single one; will be overriden by `RT_INC_PORT_START` and `RT_INC_PORT_END` (`network.port_range.set`, default `50000`)
-* `RT_INC_PORT_START`: Incoming connections port range start (`network.port_range.set`, default `50000`)
-* `RT_INC_PORT_END`: Incoming connections port range end (`network.port_range.set`, default `50000`)
-* `RT_EXT_CONFIG_FILE`: Path to the file containing custom config lines not covered by other parameters
 
 ### ruTorrent
 
@@ -267,7 +262,7 @@ properties of this file:
 * A config layout for the rTorrent's instance you can use in your `.rtorrent.rc`:
   * `cfg.basedir`: Home directory of rtorrent (`/data/rtorrent/`)
   * `cfg.download`: Download directory (`/downloads/`)
-  * `cfg.download_complete`: Completed downloads (`/downloads/completed/`)
+  * `cfg.download_complete`: Completed downloads (`/downloads/complete/`)
   * `cfg.download_temp`:  Downloads in progress (`/downloads/temp/`)
   * `cfg.logs`: Logs directory (`/data/rtorrent/log/`)
   * `cfg.session`: Session directory (`/data/rtorrent/.session/`)

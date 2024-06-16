@@ -47,12 +47,8 @@ RU_OVERWRITE_UPLOADED_TORRENTS=${RU_OVERWRITE_UPLOADED_TORRENTS:-false}
 RU_FORBID_USER_SETTINGS=${RU_FORBID_USER_SETTINGS:-false}
 RU_LOCALE=${RU_LOCALE:-UTF8}
 
-RT_SESSION_FOLDER=${RT_SESSION_FOLDER:-.session}
 RT_DHT_PORT=${RT_DHT_PORT:-6881}
-RT_INC_PORT=${RT_INC_PORT_START:-50000}
-RT_INC_PORT_START=${RT_INC_PORT_START:-0}
-RT_INC_PORT_END=${RT_INC_PORT_END:-0}
-RT_EXT_CONFIG_FILE=${RT_EXT_CONFIG_FILE}
+RT_INC_PORT=${RT_INC_PORT:-50000}
 XMLRPC_PORT=${XMLRPC_PORT:-8000}
 XMLRPC_HEALTH_PORT=$((XMLRPC_PORT + 1))
 RUTORRENT_PORT=${RUTORRENT_PORT:-8080}
@@ -146,7 +142,7 @@ EOL
 echo "Initializing files and folders..."
 mkdir -p /data/geoip \
   /data/rtorrent/log \
-  /data/rtorrent/$RT_SESSION_FOLDER \
+  /data/rtorrent/.session \
   /data/rtorrent/watch \
   /data/rutorrent/conf/users \
   /data/rutorrent/plugins \
@@ -161,7 +157,7 @@ touch /passwd/rpc.htpasswd \
   /passwd/webdav.htpasswd \
   /data/rtorrent/log/rtorrent.log \
   "${RU_LOG_FILE}"
-rm -f /data/rtorrent/$RT_SESSION_FOLDER/rtorrent.lock
+rm -f /data/rtorrent/.session/rtorrent.lock
 
 # Check htpasswd files
 if [ ! -s "/passwd/rpc.htpasswd" ]; then
@@ -182,29 +178,10 @@ fi
 
 # rTorrent local config
 echo "Checking rTorrent local configuration..."
-if [ -n "$RT_EXT_CONFIG_FILE" ]; then
-  if  [ ! -e "/data/rtorrent/$RT_EXT_CONFIG_FILE" ]; then
-    echo "Can't find the file specified by RT_EXT_CONFIG_FILE ; starting without /data/rtorrent/$RT_EXT_CONFIG_FILE"
-    rtConfigInject=""
-  else
-    rtConfigInject=`cat /data/rtorrent/$RT_EXT_CONFIG_FILE`
-  fi
-else
-  rtConfigInject=""
-fi
-
-if [ $RT_INC_PORT_START -eq 0  ] | [ $RT_INC_PORT_END -eq 0 ]; then
-  RT_INC_PORT_START=$RT_INC_PORT
-  RT_INC_PORT_END=$RT_INC_PORT
-fi
-
 sed -e "s!@RT_LOG_LEVEL@!$RT_LOG_LEVEL!g" \
-  -e "s!@RT_SESSION_FOLDER@!$RT_SESSION_FOLDER!g" \
   -e "s!@RT_DHT_PORT@!$RT_DHT_PORT!g" \
-  -e "s!@RT_INC_PORT_START@!$RT_INC_PORT_START!g" \
-  -e "s!@RT_INC_PORT_END@!$RT_INC_PORT_END!g" \
+  -e "s!@RT_INC_PORT@!$RT_INC_PORT!g" \
   -e "s!@XMLRPC_SIZE_LIMIT@!$XMLRPC_SIZE_LIMIT!g" \
-  -e "s!@RT_EXT_CONFIG_FILE@!$rtConfigInject!g" \
   -e "s!@RT_SESSION_SAVE_SECONDS@!$RT_SESSION_SAVE_SECONDS!g" \
   -e "s!@RT_TRACKER_DELAY_SCRAPE@!$RT_TRACKER_DELAY_SCRAPE!g" \
   -e "s!@RT_SEND_BUFFER_SIZE@!$RT_SEND_BUFFER_SIZE!g" \
@@ -424,7 +401,7 @@ chown rtorrent:rtorrent \
 chown -R rtorrent:rtorrent \
   /data/geoip \
   /data/rtorrent/log \
-  /data/rtorrent/"${RT_SESSION_FOLDER}" \
+  /data/rtorrent/.session \
   /data/rtorrent/watch \
   /data/rutorrent/conf \
   /data/rutorrent/plugins \

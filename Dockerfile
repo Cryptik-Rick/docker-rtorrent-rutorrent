@@ -7,8 +7,8 @@ ARG XMLRPC_VERSION=01.58.00
 ARG MKTORRENT_VERSION=v1.1
 ARG GEOIP2_PHPEXT_VERSION=1.3.1
 
-# v4.3.2
-ARG RUTORRENT_VERSION=201ef857f1863df6b5463c31fa27434915116717
+# v4.3.3
+ARG RUTORRENT_VERSION=fa4e4e29c4d0fe89faac960a56a0e00175ba75f9
 ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
 
 # v3.2-0.9.8-0.13.8
@@ -27,7 +27,7 @@ RUN curl -sSL "https://download.gnome.org/sources/libsigc%2B%2B/3.0/libsigc%2B%2
 
 FROM src AS src-cares
 ARG CARES_VERSION
-RUN curl -sSL "https://github.com/c-ares/c-ares/releases/download/cares-${CARES_VERSION//./_}/c-ares-${CARES_VERSION}.tar.gz" | tar xz --strip 1
+RUN curl -sSL "https://github.com/c-ares/c-ares/releases/download/cares-${CARES_VERSION//\./\_}/c-ares-${CARES_VERSION}.tar.gz" | tar xz --strip 1
 
 FROM src AS src-xmlrpc
 RUN git init . && git remote add origin "https://github.com/crazy-max/xmlrpc-c.git"
@@ -245,9 +245,9 @@ RUN apk --update --no-cache add \
   && rm -rf /tmp/*
 
 COPY rootfs /
-COPY ./ssl/nginx-selfsigned.crt /etc/nginx/ssl/nginx-selfsigned.crt
-COPY ./ssl/nginx-selfsigned.key /etc/nginx/ssl/nginx-selfsigned.key
-COPY .htpasswd /etc/nginx/.htpasswd
 
 VOLUME [ "/data", "/downloads", "/passwd" ]
 ENTRYPOINT [ "/init" ]
+
+HEALTHCHECK --interval=30s --timeout=20s --start-period=10s \
+  CMD /usr/local/bin/healthcheck
