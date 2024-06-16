@@ -7,11 +7,68 @@ ARG XMLRPC_VERSION=01.60.00
 ARG LIBTORRENT_VERSION=0.13.8
 ARG RTORRENT_VERSION=0.9.8
 
-FROM alpine:${ALPINE_VERSION} AS compile
+# v4.3.3
+ARG RUTORRENT_VERSION=fa4e4e29c4d0fe89faac960a56a0e00175ba75f9
+ARG GEOIP2_RUTORRENT_VERSION=4ff2bde530bb8eef13af84e4413cedea97eda148
 
 ENV DIST_PATH="/dist"
 
-RUN apk --update --no-cache add mm-common --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/
+ARG ALPINE_VERSION=3.19
+ARG ALPINE_S6_VERSION=${ALPINE_VERSION}-2.2.0.3
+
+FROM --platform=${BUILDPLATFORM} alpine:${ALPINE_VERSION} AS src
+RUN apk --update --no-cache add curl git tar tree xz
+WORKDIR /src
+
+FROM src AS src-libsig
+ARG LIBSIG_VERSION
+RUN curl -sSL "https://download.gnome.org/sources/libsigc%2B%2B/3.0/libsigc%2B%2B-${LIBSIG_VERSION}.tar.xz" | tar xJv --strip 1
+
+FROM src AS src-cares
+ARG CARES_VERSION
+RUN curl -sSL "https://github.com/c-ares/c-ares/releases/download/cares-${CARES_VERSION//\./\_}/c-ares-${CARES_VERSION}.tar.gz" | tar xz --strip 1
+
+FROM src AS src-xmlrpc
+RUN git init . && git remote add origin "https://github.com/crazy-max/xmlrpc-c.git"
+ARG XMLRPC_VERSION
+RUN git fetch origin "${XMLRPC_VERSION}" && git checkout -q FETCH_HEAD
+
+FROM src AS src-curl
+ARG CURL_VERSION
+RUN curl -sSL "https://curl.se/download/curl-${CURL_VERSION}.tar.gz" | tar xz --strip 1
+
+FROM src AS src-rtorrent
+RUN git init . && git remote add origin "https://github.com/stickz/rtorrent.git"
+ARG RTORRENT_STICKZ_VERSION
+RUN git fetch origin "${RTORRENT_STICKZ_VERSION}" && git checkout -q FETCH_HEAD
+
+FROM src AS src-mktorrent
+RUN git init . && git remote add origin "https://github.com/esmil/mktorrent.git"
+ARG MKTORRENT_VERSION
+RUN git fetch origin "${MKTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+
+FROM src AS src-geoip2-phpext
+RUN git init . && git remote add origin "https://github.com/rlerdorf/geoip.git"
+ARG GEOIP2_PHPEXT_VERSION
+RUN git fetch origin "${GEOIP2_PHPEXT_VERSION}" && git checkout -q FETCH_HEAD
+
+FROM src AS src-rutorrent
+RUN git init . && git remote add origin "https://github.com/Novik/ruTorrent.git"
+ARG RUTORRENT_VERSION
+RUN git fetch origin "${RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+RUN rm -rf .git* conf/users plugins/geoip share
+
+FROM src AS src-geoip2-rutorrent
+RUN git init . && git remote add origin "https://github.com/Micdu70/geoip2-rutorrent.git"
+ARG GEOIP2_RUTORRENT_VERSION
+RUN git fetch origin "${GEOIP2_RUTORRENT_VERSION}" && git checkout -q FETCH_HEAD
+RUN rm -rf .git*
+
+FROM src AS src-mmdb
+RUN curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-City.mmdb" \
+  && curl -SsOL "https://github.com/crazy-max/geoip-updater/raw/mmdb/GeoLite2-Country.mmdb"
+
+FROM crazymax/alpine-s6:${ALPINE_S6_VERSION} AS builder
 RUN apk --update --no-cache add \
     autoconf \
     automake \
@@ -249,4 +306,5 @@ VOLUME [ "/config", "/data", "/passwd" ]
 
 ENTRYPOINT [ "/init" ]
 
-HEALTHCHECK --interval=10s --timeout=5s --start-period=5s CMD /usr/local/bin/healthcheck
+HEALTHCHECK --interval=30s --timeout=20s --start-period=10s \
+  CMD /usr/local/bin/healthcheck

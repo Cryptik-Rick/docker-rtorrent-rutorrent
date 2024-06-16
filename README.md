@@ -141,8 +141,11 @@ docker run -d --name rutorrent \
 * `RT_LOG_EXECUTE`: Log executed commands to `/config/rtorrent/log/execute.log` (default `false`)
 * `RT_LOG_XMLRPC`: Log XMLRPC queries to `/config/rtorrent/log/xmlrpc.log` (default `false`)
 * `RT_SESSION_SAVE_SECONDS`: Seconds between writing torrent information to disk (default `3600`)
+* `RT_TRACKER_DELAY_SCRAPE`: Delay tracker announces at startup (default `true`)
 * `RT_DHT_PORT`: DHT UDP port (`dht.port.set`, default `6881`)
 * `RT_INC_PORT`: Incoming connections (`network.port_range.set`, default `50000`)
+* `RT_SEND_BUFFER_SIZE`: Sets default tcp wmem value (`network.send_buffer.size.set`, default `4M`)
+* `RT_RECEIVE_BUFFER_SIZE`: Sets default tcp rmem value (`network.receive_buffer.size.set`, default `4M`)
 
 ### ruTorrent
 
@@ -213,6 +216,36 @@ Htpasswd files used:
 * `rpc.htpasswd`: XMLRPC through nginx
 * `rutorrent.htpasswd`: ruTorrent basic auth
 * `webdav.htpasswd`: WebDAV on completed downloads
+
+### Bootstrap config `.rtlocal.rc`
+
+When rTorrent is started the bootstrap config [/etc/rtorrent/.rtlocal.rc](rootfs/tpls/etc/rtorrent/.rtlocal.rc)
+is imported. This configuration cannot be changed unless you rebuild the image
+or overwrite these elements in your `.rtorrent.rc`. Here are the particular
+properties of this file:
+
+* `system.daemon.set = true`: Launcher rTorrent as a daemon
+* A config layout for the rTorrent's instance you can use in your `.rtorrent.rc`:
+  * `cfg.basedir`: Home directory of rtorrent (`/data/rtorrent/`)
+  * `cfg.download`: Download directory (`/downloads/`)
+  * `cfg.download_complete`: Completed downloads (`/downloads/complete/`)
+  * `cfg.download_temp`:  Downloads in progress (`/downloads/temp/`)
+  * `cfg.logs`: Logs directory (`/data/rtorrent/log/`)
+  * `cfg.session`: Session directory (`/data/rtorrent/.session/`)
+  * `cfg.watch`: Watch directory for torrents (`/data/rtorrent/watch/`)
+  * `cfg.rundir`: Runtime data of rtorrent (`/var/run/rtorrent/`)
+* `d.data_path`: Config var to get the full path of data of a torrent (workaround for the possibly empty `d.base_path` attribute)
+* `directory.default.set`: Default directory to save the downloaded torrents (`cfg.download_temp`)
+* `session.path.set`: Default session directory (`cfg.session`)
+* PID file to `/var/run/rtorrent/rtorrent.pid`
+* `network.scgi.open_local`: SCGI local socket and make it group-writable and secure
+* `network.port_range.set`: Listening port for incoming peer traffic (`50000-50000`)
+* `dht.port.set`: UDP port to use for DHT (`6881`)
+* `log.open_file`: Default logging to `/data/rtorrent/log/rtorrent.log`
+  * Log level can be modified with the environment variable `RT_LOG_LEVEL`
+  * `rpc_events` are logged be default
+  * To log executed commands, add the environment variable `RT_LOG_EXECUTE`
+  * To log XMLRPC queries, add the environment variable `RT_LOG_XMLRPC`
 
 ### Override or add a ruTorrent plugin/theme
 
