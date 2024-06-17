@@ -1,6 +1,6 @@
 ARG ALPINE_VERSION=3.19
 ARG LIBSIG_VERSION=3.0.7
-ARG CARES_VERSION=1.23.0
+ARG CARES_VERSION=1.24.0
 ARG CURL_VERSION=8.5.0
 ARG GEOIP2_PHPEXT_VERSION=1.3.1
 ARG XMLRPC_VERSION=01.60.00
@@ -51,7 +51,7 @@ RUN make DESTDIR=${DIST_PATH} install -j $(nproc)
 
 ARG CARES_VERSION
 WORKDIR /tmp/cares
-RUN curl -sSL "https://c-ares.org/download/c-ares-${CARES_VERSION}.tar.gz" | tar -xz --strip 1
+RUN curl -sSL "https://github.com/c-ares/c-ares/releases/download/cares-${CARES_VERSION//\./\_}/c-ares-${CARES_VERSION}.tar.gz" | tar xz --strip 1
 RUN ./configure
 RUN make -j $(nproc) CFLAGS="-O2 -flto"
 RUN make install -j $(nproc)
