@@ -54,6 +54,13 @@ schedule2 = untied_directory, 5, 5, (cat,"stop_untied=",(cfg.watch),"*.torrent")
 # Close torrents when diskspace is low
 schedule2 = monitor_diskspace, 15, 60, ((close_low_diskspace,1000M))
 
+# ─── Disable built-in ratio & stop rules ───
+ratio.enable.set = no
+ratio.max.set     = 0.0
+ratio.min.set     = 0.0
+schedule.delete   = ratio
+schedule.delete   = stop_on_ratio
+
 # Move finished (no need Autotools/Automove plugin on ruTorrent)
 method.insert = d.get_finished_dir, simple, "cat=$cfg.download_complete=,$d.custom1="
 method.insert = d.move_to_complete, simple, "d.directory.set=$argument.1=; execute=mkdir,-p,$argument.1=; execute=mv,-u,$argument.0=,$argument.1=; d.save_full_session="
